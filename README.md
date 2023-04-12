@@ -25,3 +25,19 @@ This repo contains a Datadog agent check to monitor [Tinyproxy](https://tinyprox
 * `tinyproxy.refusedconns`: _monotonic counter_, number of refused connections.
 
 All monotonic counters reset when the `tinyproxy` process restarts.
+
+
+## Easy setup instructions
+```bash
+
+# install datadog with:
+
+datadog_api_key=xxx
+DD_AGENT_MAJOR_VERSION=7 DD_API_KEY=${datadog_api_key} DD_SITE="datadoghq.com" bash -c "$(curl -L https://s3.amazonaws.com/dd-agent/scripts/install_script.sh)"
+
+git clone https://github.com/thapakazi/tinyproxy-datadog-metrics.git /tmp/dd
+cp /tmp/dd/stats.json /usr/share/tinyproxy/stats.json
+sed -i -r 's!(^StatFile)(.*)!\1 /usr/share/tinyproxy/stats.json!' /etc/tinyproxy/tinyproxy.conf
+cp tinyproxy.py /etc/datadog-agent/checks.d/
+cp tinyproxy.yaml  /etc/datadog-agent/conf.d/
+```
