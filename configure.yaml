@@ -29,7 +29,7 @@
       ansible.builtin.lineinfile:
         path: /etc/tinyproxy/tinyproxy.conf
         regexp: '^StatFile(.*)'
-        line: 'StatFile /usr/share/tinyproxy/stats.json'
+        line: 'StatFile "/usr/share/tinyproxy/stats.json"'
 
     - name: Copy tinyproxy.py to /etc/datadog-agent/checks.d/
       ansible.builtin.copy:
@@ -40,3 +40,16 @@
       ansible.builtin.copy:
         src: /tmp/dd/tinyproxy.yaml
         dest: /etc/datadog-agent/conf.d/
+
+    - name: Restart Tinyproxy
+      ansible.builtin.systemd:
+        name: tinyproxy
+        state: restarted
+
+    - name: Restart Datadog Agent
+      ansible.builtin.systemd:
+        name: datadog-agent
+        state: restarted
+
+
+
